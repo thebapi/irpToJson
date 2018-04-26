@@ -17,7 +17,7 @@
     <form class="form-inline  margin-left-10">
       <div class="form-group">
         <label>Sheet Name &nbsp;</label>
-        <select class="form-control" (change)="handleSheetNameChanged(sheetName, sheetNameAlias[sheetName])"
+        <select class="form-control margin-left-5" (change)="handleSheetNameChanged(sheetName, sheetNameAlias[sheetName])"
                 [(ngModel)]="sheetNameAlias[sheetName]"
                 name="sheetName-{{ sheetName }}" id="sheetName-{{ sheetName }}"
                 placeholder="Please select sheet name"

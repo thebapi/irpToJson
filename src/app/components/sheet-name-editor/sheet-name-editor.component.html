@@ -16,7 +16,7 @@
       <div class="form-group">
         <label> <strong> Current Sheet Name: {{ sheetName }}</strong></label>
          <span class="ion ion-code"></span>
-        <select class="form-control" (change)="handleSheetNameChanged(sheetName, sheetNameAlias[sheetName])"
+        <select class="form-control  margin-left-5" (change)="handleSheetNameChanged(sheetName, sheetNameAlias[sheetName])"
                 name="sheetName-{{ sheetName }}" id="sheetName-{{ sheetName }}"
                 [(ngModel)]="sheetNameAlias[sheetName]"
                 placeholder="Please select sheet name"

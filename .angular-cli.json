@@ -23,7 +23,8 @@
         "../node_modules/ionicons/dist/css/ionicons.css",
         "../node_modules/ngx-toastr/toastr.css",
         "../node_modules/jstree/dist/themes/default/style.css",
-        "styles.css"
+        "styles/floating-labels.css",
+        "styles/styles.css"
        ],
       "scripts": [
       ],

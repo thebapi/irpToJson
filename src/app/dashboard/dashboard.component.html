@@ -31,8 +31,6 @@
         </div>
 
       </div>
-
-
       <div class="row">
         <div class="col-perc-100">
           <h3>Step 2</h3>
@@ -138,17 +136,19 @@
     </form>
     <h3>Consolidated Output</h3>
     <hr>
-  <div>
+  <div class="row">
     <span class="pull-left" *ngIf="totalNumberOfInvestment > 0">Total # of Investment <strong>{{ totalNumberOfInvestment }}</strong></span>
     <br>
     <span class="pull-left" *ngIf="totalNumberOfAsset > 0">Total # of Asset <strong>{{ totalNumberOfAsset }}</strong></span>
   </div>
-    <div class="row clearfix margin-top-20" id="investmentTreeView">
+  <div class="row clearfix margin-top-20">
+    <div id="investmentTreeView">
     </div>
+  </div>
 
   <div class="row" *ngIf="errorMsgLog">
     <button class="btn btn-link pull-right"  (click)="showErrorMsgLog = !showErrorMsgLog"> <span *ngIf="showErrorMsgLog">Hide Error Log</span>
       <span *ngIf="!showErrorMsgLog">Show Error Log</span> </button>
-    <textarea *ngIf="showErrorMsgLog"  rows="10"  class="form-control col-perc-100 pull-right">{{ errorMsgLog }}</textarea>
+      <textarea *ngIf="showErrorMsgLog"  rows="10"  class="form-control col-perc-100 pull-right">{{ errorMsgLog }}</textarea>
   </div>
   </div>
