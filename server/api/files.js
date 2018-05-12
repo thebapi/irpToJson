@@ -1,5 +1,5 @@
 /**
- * Created by sajibsarkar on 11/18/17.
+ * Created by sajib sarkar on 11/18/17.
  */
 'use strict';
 
@@ -16,6 +16,7 @@ module.exports.upload = function (req, res, params, next) {
 
     if(req.files &&  Array.isArray(req.files)){
         req.files.map(function (_file) {
+            console.log('_file', _file);
             if(/^loanFile/.test(_file.fieldname)){
                 loanFile.push(_file);
             } else if(/^serviceFile/.test(_file.fieldname)){
@@ -24,13 +25,10 @@ module.exports.upload = function (req, res, params, next) {
                 lperFile.push(_file);
             }
         });
-
-
     }
 
     if (loanFile.length > 0 && serviceFile.length > 0){
         dataParser.processInputFiles({loanFile: loanFile, serviceFile: serviceFile, lperFile: lperFile}).then(function (investmentJson) {
-           // next(new Error('Test  Error'));
             params  = null;
             loanFile    = null;
             serviceFile = null;
@@ -45,6 +43,7 @@ module.exports.upload = function (req, res, params, next) {
             next(err);
         });
     } else {
+      _removeFile(req.files);
         next(new Error('Invalid Upload  Files'));
     }
 

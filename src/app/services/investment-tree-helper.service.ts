@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import *  as  _ from 'lodash';
+import * as _ from 'lodash';
 
 const otherPropertyKeys = [
   'tccomparativefinancialstatusirp',
@@ -16,10 +16,9 @@ const otherPropertyKeys = [
 @Injectable()
 export class InvestmentTreeHelperService {
 
-  constructor() {
-  }
+  constructor() {}
 
-  buildTree(data: [any]) {
+  buildTree(data: any[]) {
     const treeData = [];
     for (const investment of data) {
       const investmentNode = _prepareInvestmentNode(
@@ -38,7 +37,7 @@ export class InvestmentTreeHelperService {
 function _prepareLineItemNode(_financial) {
 
   const grandLineItemNode = {
-    text: 'LineItems',
+    name: 'LineItems',
     children: []
   };
 
@@ -47,7 +46,7 @@ function _prepareLineItemNode(_financial) {
   for (const stmtTypeKey of lineItemKeys) {
 
     const lineItemNode = {
-      text      : stmtTypeKey,
+      name      : stmtTypeKey,
       children  : []
     };
 
@@ -57,7 +56,7 @@ function _prepareLineItemNode(_financial) {
 
     _.sortBy(Object.keys(lineItemsByCategoryCode)).forEach(function (catKey) {
       const lineItemCatNode = {
-        text      : catKey,
+        name      : catKey,
         children  : []
       };
 
@@ -65,7 +64,7 @@ function _prepareLineItemNode(_financial) {
         Object.keys(nodeItem).forEach(function(dataKey) {
           if (!Array.isArray(nodeItem[dataKey])) {
             const _nodeItem = {
-              text: [dataKey, nodeItem[dataKey]].join(
+              name: [dataKey, nodeItem[dataKey]].join(
                 ' : '
               ),
               icon: 'none'
@@ -88,7 +87,7 @@ function _prepareLineItemNode(_financial) {
 
 function _prepareFinancialNodes(property) {
   const grandFinancialNode = {
-    text: 'Financials',
+    name: 'Financials',
     children: []
   };
 
@@ -101,13 +100,13 @@ function _prepareFinancialNodes(property) {
         _financial.endDate = new Date(_financial.endDate);
       }
       const financialNode = {
-        text: _financial.startDate,
+        name: _financial.startDate,
         children: []
       };
       Object.keys(_financial).forEach(function(financeKey) {
         if (financeKey !== 'lineItems' && !Array.isArray(_financial[financeKey])) {
           const _financeNodeItem = {
-            text: [financeKey, _financial[financeKey]].join(
+            name: [financeKey, _financial[financeKey]].join(
               ' : '
             ),
             icon: 'none'
@@ -126,21 +125,21 @@ function _prepareFinancialNodes(property) {
 
 function _preparePropertiesNode(investment) {
   const grandPropertiesNode = {
-    text: 'Properties',
+    name: 'Properties',
     children: []
   };
 
   if (Array.isArray(investment.properties)) {
     investment.properties.forEach(function(property) {
       const propertiesNode = {
-        text: property.propertyId,
+        name: property.propertyId,
         children: []
       };
 
       Object.keys(property).forEach(function(propKey) {
         if (!Array.isArray(property[propKey])) {
           const propNodeItem = {
-            text: [propKey, property[propKey]].join(' : '),
+            name: [propKey, property[propKey]].join(' : '),
             icon: 'none'
           };
           propertiesNode.children.push(propNodeItem);
@@ -148,7 +147,7 @@ function _preparePropertiesNode(investment) {
       });
 
       const grandRptreostatusNode = {
-        text: 'rptreostatus',
+        name: 'rptreostatus',
         children: []
       };
       if (Array.isArray(property.rptreostatus)) {
@@ -162,7 +161,7 @@ function _preparePropertiesNode(investment) {
           __keyName
         ) {
           const rptreostatusNode = {
-            text: __keyName,
+            name: __keyName,
             children: []
           };
           rptreostatusByDates[__keyName].forEach(function(
@@ -171,7 +170,7 @@ function _preparePropertiesNode(investment) {
             Object.keys(dataItem).forEach(function(dataKey) {
               if (!Array.isArray(dataItem[dataKey])) {
                 const _nodeItem = {
-                  text: [dataKey, dataItem[dataKey]].join(
+                  name: [dataKey, dataItem[dataKey]].join(
                     ' : '
                   ),
                   icon: 'none'
@@ -197,7 +196,7 @@ function _preparePropertiesNode(investment) {
 function _preparePeriodeicUpdateNode(investment) {
 
   const grandPeriodicNode = {
-    text: 'loanPeriodicUpdate',
+    name: 'loanPeriodicUpdate',
     children: []
   };
 
@@ -205,14 +204,14 @@ function _preparePeriodeicUpdateNode(investment) {
 
     investment.loanPeriodicUpdate.forEach(function(periodicUpdateData) {
       const periodicNode = {
-        text: periodicUpdateData.paidThroughDate,
+        name: periodicUpdateData.paidThroughDate,
         children: []
       };
 
       Object.keys(periodicUpdateData).forEach(function(propKey) {
         if (!Array.isArray(periodicUpdateData[propKey])) {
           const propNodeItem = {
-            text: [propKey, periodicUpdateData[propKey]].join(' : '),
+            name: [propKey, periodicUpdateData[propKey]].join(' : '),
             icon: 'none'
           };
           periodicNode.children.push(propNodeItem);
@@ -229,7 +228,7 @@ function _preparePeriodeicUpdateNode(investment) {
 function _prepareLoanSetUpNode(investment) {
 
   const grandLoanSetupNode = {
-    text: 'loanSetUp',
+    name: 'loanSetUp',
     children: []
   };
 
@@ -237,14 +236,14 @@ function _prepareLoanSetUpNode(investment) {
 
     investment.loanSetUp.forEach(function(loanSetupData) {
       const loanSetupNode = {
-        text: loanSetupData.prospectusLoanId,
+        name: loanSetupData.prospectusLoanId,
         children: []
       };
 
       Object.keys(loanSetupData).forEach(function(propKey) {
         if (!Array.isArray(loanSetupData[propKey])) {
           const loanSetupNodeItem = {
-            text: [propKey, loanSetupData[propKey]].join(' : '),
+            name: [propKey, loanSetupData[propKey]].join(' : '),
             icon: 'none'
           };
           loanSetupNode.children.push(loanSetupNodeItem);
@@ -257,12 +256,12 @@ function _prepareLoanSetUpNode(investment) {
 
 }
 
-function _prepareOtherPropertyNode(investment, otherPropertyKeys) {
+function _prepareOtherPropertyNode(investment, __otherPropertyKeys) {
   const _otherGrandNodes = [];
 
   let uniqDates = [];
 
-  otherPropertyKeys.forEach(function(_otherPropertyKey) {
+  __otherPropertyKeys.forEach(function(_otherPropertyKey) {
     if (
       Array.isArray(investment[_otherPropertyKey]) &&
       investment[_otherPropertyKey].length > 0
@@ -286,13 +285,13 @@ function _prepareOtherPropertyNode(investment, otherPropertyKeys) {
   uniqDates = _.sortBy(uniqDates, item => new Date(item));
   uniqDates.forEach(function(_dtStr) {
     const dateNode = {
-      text: _dtStr,
+      name: _dtStr,
       children: []
     };
 
-    otherPropertyKeys.forEach(function(_otherPropertyKey) {
+    __otherPropertyKeys.forEach(function(_otherPropertyKey) {
       const otherPropertyNode = {
-        text: _otherPropertyKey,
+        name: _otherPropertyKey,
         children: []
       };
 
@@ -338,7 +337,7 @@ function _prepareOtherPropertyNode(investment, otherPropertyKeys) {
             otherPropertyGroupedKeyName
           ) {
             const _groupedNode = {
-              text: otherPropertyGroupedKeyName,
+              name: otherPropertyGroupedKeyName,
               children: []
             };
             otherPropertyGroupedData[
@@ -349,7 +348,7 @@ function _prepareOtherPropertyNode(investment, otherPropertyKeys) {
               ) {
                 if (!Array.isArray(dataItem[propKey])) {
                   const dataNode = {
-                    text: [
+                    name: [
                       propKey,
                       dataItem[propKey]
                     ].join(' : '),
@@ -368,7 +367,7 @@ function _prepareOtherPropertyNode(investment, otherPropertyKeys) {
             Object.keys(dataItem).forEach(function(propKey) {
               if (!Array.isArray(dataItem[propKey])) {
                 const dataNode = {
-                  text: [propKey, dataItem[propKey]].join(
+                  name: [propKey, dataItem[propKey]].join(
                     ' : '
                   ),
                   icon: 'none'
@@ -388,14 +387,14 @@ function _prepareOtherPropertyNode(investment, otherPropertyKeys) {
 
 function _prepareInvestmentNode(investment) {
   const investmentNode = {
-    text: investment.loanId,
+    name: investment.loanId,
     children: []
   };
 
   Object.keys(investment).forEach(function(key) {
     if (!Array.isArray(investment[key])) {
       const nodeItem = {
-        text: [key, investment[key]].join(' : '),
+        name: [key, investment[key]].join(' : '),
         icon: 'none'
       };
       investmentNode.children.push(nodeItem);

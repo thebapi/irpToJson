@@ -11,8 +11,8 @@
 
         <div class="col-perc-30 ta-center">
           &nbsp;
-          <div class="text-success" *ngFor="let loanFile of loanFileuploader.queue">
-            <span> &nbsp;{{ loanFile.file.name }}</span>
+          <div class="text-success" *ngFor="let loanFile of loanFilesConverted$ | async">
+            <span> &nbsp;{{ loanFile.name }}</span>
           </div>
         </div>
         <div class="col-perc-30 float-right">
@@ -42,8 +42,8 @@
 
         <div class="col-perc-30 ta-center">
           &nbsp;
-          <div class="text-success" *ngFor="let serviceFile of serviceFileuploader.queue">
-            <span> &nbsp;{{ serviceFile.file.name }}</span>
+          <div class="text-success" *ngFor="let serviceFile of serviceFilesConverted$ | async">
+            <span> &nbsp;{{ serviceFile.name }}</span>
           </div>
         </div>
         <div class="col-perc-30 float-right">
@@ -70,9 +70,9 @@
         <div class="">
           <small>Tabs must be named according to CREFC IRP Guidelines. If, after upload, any of the required sections do not appear green, please edit the tab name in your original file and upload the revised file.</small>
         </div>
-        <div class="col-perc-20"   *ngFor="let tab of availableServiceTabs">
+        <div class="col-perc-20"   *ngFor="let tab of serviceFilesAllSheetName$ | async">
           <div class="alert bordered" [ngClass]="{ 'alert-success': tab.isAvailable }">
-            <span>{{ tab.name }}</span>
+            <span><small>{{ tab.name }}</small> </span>
           </div>
         </div>
       </div>
@@ -89,8 +89,8 @@
 
         <div class="col-perc-30 ta-center">
           &nbsp;
-          <div class="text-success" *ngFor="let lperFile of lperFileuploader.queue">
-            <span> &nbsp;{{ lperFile.file.name }}</span>
+          <div class="text-success" *ngFor="let lperFile of lperFilesConverted$ | async">
+            <span> &nbsp;{{ lperFile.name }}</span>
           </div>
         </div>
         <div class="col-perc-30 float-right">
@@ -119,31 +119,28 @@
         <div class="col-perc-40 large-font">
           Consolidate IRP to Single File Format
         </div>
-
         <div class="col-perc-35 ta-center">
           &nbsp;
-
         </div>
         <div class="col-perc-25 float-right">
           <button type="button" class="btn btn-outline-success "
-                  (click)="uploadFiles()"><span *ngIf="!submittingFiles">Consolidate</span><span
-            *ngIf="submittingFiles">  Consolidating <app-tiny-spinner></app-tiny-spinner></span>
+            (click)="uploadFiles()"><span *ngIf="(processingFile$ | async) === false">Consolidate</span><span
+            *ngIf="processingFile$ | async">  Consolidating <app-tiny-spinner></app-tiny-spinner></span>
           </button>
           <button type="button" class="btn btn-outline-primary pull-right"   (click)="downloadJson()"> Download File</button>
         </div>
-
       </div>
     </form>
     <h3>Consolidated Output</h3>
     <hr>
-  <div class="row">
-    <span class="pull-left" *ngIf="totalNumberOfInvestment > 0">Total # of Investment <strong>{{ totalNumberOfInvestment }}</strong></span>
-    <br>
-    <span class="pull-left" *ngIf="totalNumberOfAsset > 0">Total # of Asset <strong>{{ totalNumberOfAsset }}</strong></span>
+  <div class="row" *ngIf="(totalNumberOfInvestment$ | async) > 0">
+    <span class="pull-left">Total # of Investment <strong>{{ totalNumberOfInvestment$ | async }}</strong></span>
+  </div>
+  <div class="row" *ngIf="(totalNumberOfAsset$ | async) > 0">
+    <span class="pull-left">Total # of Asset <strong>{{ totalNumberOfAsset$ | async }}</strong></span>
   </div>
   <div class="row clearfix margin-top-20">
-    <div id="investmentTreeView">
-    </div>
+    <tree-root id="investmentTreeView" [nodes]="treeJsonData$ | async" [options]="treeOptions"></tree-root>
   </div>
 
   <div class="row" *ngIf="errorMsgLog">

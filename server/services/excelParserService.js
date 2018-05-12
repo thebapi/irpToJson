@@ -181,8 +181,6 @@ module.exports.parseFinancialBinaryFile = function (file, params) {
                     }
                 });
             }
-           // console.log('property length', tableData['property'].length);
-            //console.log('financial length', tableData['financial'].length);
             resolve(tableData);
         });
 };

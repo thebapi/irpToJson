@@ -22,8 +22,6 @@ const express = require('express'),
     multer = require('multer'),
     upload = multer({dest: "./server/uploads/", preservePath:true});
 
-let uploadMiddleWare = upload.fields([{name: 'loanFile', maxCount: 1}, {name: 'serviceFile', maxCount: 1}]);
-
 let app = module.exports = express();
 
 if (app.get('env') === 'production') {
@@ -100,6 +98,7 @@ app.get('*', function (req, res) {
 
 app.use(function (err, req, res, next) {
     if (!res.headersSent) {
+      console.log("Error : ", err);
         res.status(400).json({code: err.code, message: err.message || 'Unexpected error occurred.'});
     }
 });

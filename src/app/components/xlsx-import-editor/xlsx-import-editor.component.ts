@@ -19,7 +19,7 @@ export class XlsxImportEditorComponent implements OnInit {
   isLoanFile: boolean;
   htmlTables = [];
   workbook: WorkBook;
-  sheetNameOptions: [string];
+  sheetNameOptions: string[];
   sheetNameAlias = {};
   @Input() params: any;
   isProcessing: false;
@@ -43,7 +43,7 @@ export class XlsxImportEditorComponent implements OnInit {
 
 
 
-  protected submit() {
+   submit() {
     const self = this;
     if (Array.isArray(this.htmlTables)) {
       const inValidSheetName = this.htmlTables.find(function(sheetName) {
@@ -68,7 +68,7 @@ export class XlsxImportEditorComponent implements OnInit {
     this.activeModal.close({file: this.file});
   }
 
-  protected makeXlsxFile(wb, self) {
+   makeXlsxFile(wb, self) {
     const wbout = XLSX.write(wb, {cellDates: true, type: 'binary', bookSST: false, bookType: 'xlsx'});
     const s2ab = function (s) {
       const buf = new ArrayBuffer(s.length);
@@ -87,7 +87,7 @@ export class XlsxImportEditorComponent implements OnInit {
 
 
 
-  protected startProcessFile(file) {
+   startProcessFile(file) {
     const self = this;
     let reader: FileReader;
     reader = new FileReader();
@@ -106,7 +106,7 @@ export class XlsxImportEditorComponent implements OnInit {
     reader.readAsBinaryString(file.rawFile);
   }
 
-  protected readXlsFileData(data) {
+  readXlsFileData(data) {
     try {
       return XLSX.read(data, { type: 'binary', cellDates: true });
     } catch (ex) {
@@ -114,7 +114,7 @@ export class XlsxImportEditorComponent implements OnInit {
     }
   }
 
-  protected process_wb(wb) {
+  process_wb(wb) {
     if (wb) {
       const workbook = wb;
       const sheetNameAlias = {};
@@ -138,7 +138,7 @@ export class XlsxImportEditorComponent implements OnInit {
     }
   }
 
-  protected handleSheetNameChanged (oldsheetName: string, newSheetName:  string) {
+  handleSheetNameChanged (oldsheetName: string, newSheetName:  string) {
     const self = this;
     if (newSheetName) {
       if (this.workbook) {
