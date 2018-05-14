@@ -2,7 +2,7 @@ import { InvestmentActionTypes, InvestmentActions } from '../actions/investment.
 
 import * as _ from 'lodash';
 
-import {InvestmentTreeHelperService} from '../../services/investment-tree-helper.service';
+import {InvestmentTreeHelperService} from '../../helpers/investment-tree-helper.service';
 
 export interface State {
   data: Object;
@@ -74,10 +74,8 @@ export function reducer(state: State = initialState, action: InvestmentActions )
       }];
       const newState = {
         ...state,
-        data: action.payload,
         processing: false,
         processcompleted: true,
-        investmentData: payload.investmentData,
         treeJsonData:  treeJsonData
       };
       return newState;
@@ -114,3 +112,5 @@ export const   getTotalNumberOfInvestment  = state => state.totalNumberOfInvestm
 export const   getTotalNumberOfAsset = state => state.totalNumberOfAsset;
 
 export const getTreeData = state => state.treeJsonData;
+
+export const getInvestmentData = state => state.investmentData;

@@ -20,8 +20,8 @@ import { Observable,  } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import {ModalService} from '../../services/modal.service';
 import {fromPromise} from 'rxjs/internal/observable/fromPromise';
-import * as XLSX from 'xlsx';
 import {AppState, stateSelectors } from '../reducers';
+import {XlsxParserHelperService} from '../../helpers/xlsx-parser-helper.service';
 
 
 @Injectable()
@@ -51,43 +51,17 @@ export class ServiceFileEffects {
     switchMap(payload => {
       const { files } = payload;
       const  _promises = [];
-      files.forEach(_fileItem => _promises.push(getUpdatedSheetNames(_fileItem)));
+      files.forEach(_fileItem => _promises.push(this.xlsxParserHelperService.getAllSheetNames(_fileItem)));
       return fromPromise(Promise.all(_promises).then(function (allSheetNames) {
         return new UpdateAllSheetNames(_.flatten(allSheetNames));
       }));
     }));
 
 
-  constructor (private actions$: Actions, private modalService$: ModalService, private store$: Store<AppState>) {}
+  constructor (private actions$: Actions, private modalService$: ModalService, private store$: Store<AppState>, private xlsxParserHelperService: XlsxParserHelperService) {}
 }
 
 
-function getUpdatedSheetNames(file) {
-
-  return  new Promise((resolve, reject) => {
-    const sheetNames = [];
-    const reader = new FileReader();
-    reader.onload = function(e: any) {
-      const data = e.target.result;
-      let workbook;
-      try {
-        workbook = XLSX.read(data, { type: 'binary', cellDates: true });
-        if (workbook && Array.isArray(workbook.SheetNames)) {
-          workbook.SheetNames.forEach(function(sheetName) {
-            sheetNames.push(sheetName.toLowerCase());
-          });
-        }
-        resolve(sheetNames);
-      } catch (ex) {
-        const message =
-          'Failed to read the uploaded file. Please check if it contains unsupported characters or formats.';
-        console.log(message);
-        reject(ex);
-      }
-    };
-    reader.readAsBinaryString(file.rawFile);
-  });
-}
 
 function processFiles(payload, serviceFilePropertyMap, modalService) {
   const { files } = payload;

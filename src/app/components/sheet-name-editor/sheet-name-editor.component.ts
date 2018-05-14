@@ -1,12 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FileLikeObject} from 'ng2-file-upload';
-import {AppConstant} from '../../app-constant';
-import {WorkBook} from 'xlsx';
-import { Workbook } from '../../types/workbook';
-import * as XLSX from 'xlsx';
 import { XlsxImportEditorComponent } from '../xlsx-import-editor/xlsx-import-editor.component';
 import {ToastrService} from 'ngx-toastr';
+import {XlsxParserHelperService} from '../../helpers/xlsx-parser-helper.service';
 
 @Component({
   selector: 'app-sheet-name-editor',
@@ -15,7 +11,7 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class SheetNameEditorComponent extends XlsxImportEditorComponent {
 
-  constructor(activeModal: NgbActiveModal, toastr: ToastrService) {
-    super(activeModal, toastr);
+  constructor(activeModal: NgbActiveModal, toastr: ToastrService, xlsxParserHelperService: XlsxParserHelperService) {
+    super(activeModal, toastr, xlsxParserHelperService);
   }
 }

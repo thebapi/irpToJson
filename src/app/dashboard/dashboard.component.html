@@ -12,7 +12,7 @@
         <div class="col-perc-30 ta-center">
           &nbsp;
           <div class="text-success" *ngFor="let loanFile of loanFilesConverted$ | async">
-            <span> &nbsp;{{ loanFile.name }}</span>
+            <small> &nbsp;{{ loanFile.name }}</small>
           </div>
         </div>
         <div class="col-perc-30 float-right">
@@ -43,7 +43,7 @@
         <div class="col-perc-30 ta-center">
           &nbsp;
           <div class="text-success" *ngFor="let serviceFile of serviceFilesConverted$ | async">
-            <span> &nbsp;{{ serviceFile.name }}</span>
+            <small> &nbsp;{{ serviceFile.name }}</small>
           </div>
         </div>
         <div class="col-perc-30 float-right">
@@ -72,7 +72,7 @@
         </div>
         <div class="col-perc-20"   *ngFor="let tab of serviceFilesAllSheetName$ | async">
           <div class="alert bordered" [ngClass]="{ 'alert-success': tab.isAvailable }">
-            <span><small>{{ tab.name }}</small> </span>
+            <small>{{ tab.name }}</small>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@
         <div class="col-perc-30 ta-center">
           &nbsp;
           <div class="text-success" *ngFor="let lperFile of lperFilesConverted$ | async">
-            <span> &nbsp;{{ lperFile.name }}</span>
+            <small> &nbsp;{{ lperFile.name }}</small>
           </div>
         </div>
         <div class="col-perc-30 float-right">

@@ -58,6 +58,7 @@ const getInvestmentUploadState    = createSelector((state: AppState) => state.in
  const getTotalNumberOfInvestment = createSelector(getInvestmentUploadState, fromInvestment.getTotalNumberOfInvestment);
  const getTotalNumberOfAsset      = createSelector(getInvestmentUploadState, fromInvestment.getTotalNumberOfAsset);
  const getTreeState                = createSelector(getInvestmentUploadState, fromInvestment.getTreeData);
+ const getInvestmentData          = createSelector(getInvestmentUploadState, fromInvestment.getInvestmentData);
 
 
 /***
@@ -101,7 +102,8 @@ export const stateSelectors = {
     getProcessingError,
     getTotalNumberOfInvestment,
     getTotalNumberOfAsset,
-    getTreeState
+    getTreeState,
+    getInvestmentData
   },
   loanFileEditor: {
     getLoanFileEditorState,

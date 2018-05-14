@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import {WorkBook} from 'xlsx';
 import { Workbook } from '../../types/workbook';
 import {ToastrService} from 'ngx-toastr';
+import {XlsxParserHelperService} from '../../helpers/xlsx-parser-helper.service';
 
 
 @Component({
@@ -14,6 +15,7 @@ import {ToastrService} from 'ngx-toastr';
   styleUrls: ['./xlsx-import-editor.component.css']
 })
 export class XlsxImportEditorComponent implements OnInit {
+  @Input() params: any;
   activeModal: NgbActiveModal;
   file: FileLikeObject;
   isLoanFile: boolean;
@@ -21,16 +23,16 @@ export class XlsxImportEditorComponent implements OnInit {
   workbook: WorkBook;
   sheetNameOptions: string[];
   sheetNameAlias = {};
-  @Input() params: any;
   isProcessing: false;
   toastr: ToastrService;
+  xlsxParserHelperService: XlsxParserHelperService;
 
 
-  constructor(activeModal: NgbActiveModal, toastr: ToastrService) {
+  constructor(activeModal: NgbActiveModal, toastr: ToastrService, xlsxParserHelperService: XlsxParserHelperService) {
     this.sheetNameOptions = AppConstant.SHEET_NAME_OPTIONS;
     this.activeModal = activeModal;
     this.toastr = toastr;
-
+    this.xlsxParserHelperService = xlsxParserHelperService;
   }
 
   ngOnInit() {
@@ -40,8 +42,6 @@ export class XlsxImportEditorComponent implements OnInit {
       this.startProcessFile(this.file);
     }
   }
-
-
 
    submit() {
     const self = this;
@@ -61,87 +61,29 @@ export class XlsxImportEditorComponent implements OnInit {
         wb.Sheets[aliasName] =  self.workbook.Sheets[sheetName];
       });
 
-      const {modifiedFileName, modifiedFile} = this.makeXlsxFile(wb, self);
+      const { modifiedFileName, modifiedFile } = this.xlsxParserHelperService.makeXlsxFile(wb, self.file);
       this.file = new FileLikeObject(modifiedFile);
       this.file.name  =  modifiedFileName + '.xlsx';
     }
     this.activeModal.close({file: this.file});
   }
 
-   makeXlsxFile(wb, self) {
-    const wbout = XLSX.write(wb, {cellDates: true, type: 'binary', bookSST: false, bookType: 'xlsx'});
-    const s2ab = function (s) {
-      const buf = new ArrayBuffer(s.length);
-      const view = new Uint8Array(buf);
-      for (let i = 0; i !== s.length; ++i) {
-        view[i] = s.charCodeAt(i) & 0xff;
-      }
-      return buf;
-    };
-    const modifiedFileName = self.file.name.substring(0, self.file.name.lastIndexOf('.'));
-    const modifiedFile = new Blob([s2ab(wbout)], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-    return {modifiedFileName, modifiedFile};
-  }
-
-
-
-   startProcessFile(file) {
-    const self = this;
-    let reader: FileReader;
-    reader = new FileReader();
-    reader.onload = function(e: any) {
-      const data = e.target.result;
-      function doitnow() {
-        try {
-          const wb = self.readXlsFileData(data);
-          self.process_wb(wb);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      doitnow();
-    };
-    reader.readAsBinaryString(file.rawFile);
-  }
-
-  readXlsFileData(data) {
-    try {
-      return XLSX.read(data, { type: 'binary', cellDates: true });
-    } catch (ex) {
-      throw ex;
-    }
-  }
-
-  process_wb(wb) {
-    if (wb) {
-      const workbook = wb;
-      const sheetNameAlias = {};
-      if (workbook && Array.isArray(workbook.SheetNames)) {
-        workbook.SheetNames.forEach(function(sheetName) {
-          if (new RegExp('_property', 'i').test(sheetName)) {
-            sheetNameAlias[sheetName] = '_property';
-          } else if (new RegExp('_financial', 'i').test(sheetName)) {
-            sheetNameAlias[sheetName] = '_financial';
-          } else {
-            sheetNameAlias[sheetName] = sheetName.toLowerCase();
-          }
-        });
-      }
+  startProcessFile(file) {
+    this.xlsxParserHelperService.processFile(file).then((result: any) => {
+      const { workbook, sheetNameAlias } = result;
       this.workbook = workbook;
       this.sheetNameAlias = sheetNameAlias;
-    }
-
-    if (this.isLoanFile === true) {
-      this.submit();
-    }
+      if (this.isLoanFile === true) {
+        this.submit();
+      }
+    }).catch(err => this.toastr.error(err.message));
   }
+
 
   handleSheetNameChanged (oldsheetName: string, newSheetName:  string) {
     const self = this;
     if (newSheetName) {
-      if (this.workbook) {
+      if (this.workbook && Array.isArray(this.workbook.SheetNames)) {
         if (this.workbook.SheetNames.findIndex(item => item === newSheetName) > -1) {
           this.toastr.error(`${newSheetName} already exists. Please choose another name`);
           self.sheetNameAlias[oldsheetName] = oldsheetName;

@@ -28,7 +28,6 @@ export class LperFileEffects {
     ofType<Process>(LperFileEditActionTypes.PROCESS),
     map(action  => action.payload),
     switchMap(files => {
-
       const self = this;
       return fromPromise(processFiles(files, self.modalService$).then((fileItems) => {
         return new ConvertSuccess(fileItems);
@@ -57,8 +56,6 @@ function processFiles(files, modalService) {
               {file: file, isLoanFile: true}
             );
             if (result && result.file) {
-              // self.loanFileuploader.removeFromQueue(item);
-              // self.loanFileuploader.addToQueue([result.file]);
               next(null, result.file);
             } else {
               next(null, file);
