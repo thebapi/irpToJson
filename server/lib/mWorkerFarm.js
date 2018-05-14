@@ -13,10 +13,8 @@ class WorkerFarm extends Farm {
         let opts = {
             maxConcurrentWorkers: getNumWorkers(),
             maxCallsPerWorker  : Infinity,
-           // maxConcurrentCallsPerWorker : 10,
             autoStart: true
         };
-        //options.workerPath
         super(opts, require.resolve(options.workerPath));
         this.localWorker  = this.promisifyWorker(require(options.workerPath));
         this.remoteWorker = this.promisifyWorker(this.setup(['init', 'run', 'start']));
@@ -75,9 +73,6 @@ class WorkerFarm extends Farm {
                     reject(err);
                 });
             } else {
-                // Workers have started, but are not warmed up yet.
-                // Send the job to a remote worker in the background,
-                // but use the result from the local worker - it will be faster.
                 if (this.started) {
                     this.remoteWorker.run(...args).then((results)=>{
                         this.warmWorkers++;
@@ -89,27 +84,15 @@ class WorkerFarm extends Farm {
                     this.localWorker.run(...args).then(function (results) {
                         resolve(results);
                     }).catch(err=> reject(err));
-                    /*this.localWorker.run(...args, function (err, results){
-                        if(err){
-                            reject(err);
-                        }  else {
-                            resolve(results);
-                        }
-
-                    });*/
                 }
 
             }
         });
-        // Child process workers are slow to start (~600ms).
-        // While we're waiting, just run on the main thread.
-        // This significantly speeds up startup time.
 
     }
 
     shouldUseRemoteWorkers() {
         return this.started;
-            //&& this.warmWorkers >= this.activeChildren;
     }
 
 
@@ -146,7 +129,7 @@ function promisify(fn) {
             });
         });
     };
-};
+}
 
 
 for (let key in EventEmitter.prototype) {
@@ -154,9 +137,6 @@ for (let key in EventEmitter.prototype) {
 }
 
 function getNumWorkers() {
-    //temporarily returns  1 to avoid the  memory  issue
-    //return  1;
-
     if (process.env.M_WORKERS) {
         return parseInt(process.env.M_WORKERS, 10);
     }

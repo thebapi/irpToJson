@@ -26,7 +26,7 @@ exports.init = function(options, callback) {
 
 exports.run = function(taskName, file, params, callback) {
     let startTime = Date.now();
-    console.log(`Process started as pid: ${process.pid}`);
+    //console.log(`Process started as pid: ${process.pid}`);
 
     let _methodName = taskName === 'financialParse' ? '_processFinancialFile' : '';
     switch (taskName) {
@@ -47,7 +47,7 @@ exports.run = function(taskName, file, params, callback) {
     exports[_methodName]
         .call(null, file, params)
         .then(results => {
-            console.log(`pid: ${process.pid} took time`, Date.now() - startTime);
+            //console.log(`pid: ${process.pid} took time`, Date.now() - startTime);
             //_cleanMemory();
             callback(null, results);
         })

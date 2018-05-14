@@ -16,7 +16,7 @@ module.exports.upload = function (req, res, params, next) {
 
     if(req.files &&  Array.isArray(req.files)){
         req.files.map(function (_file) {
-            console.log('_file', _file);
+           // console.log('_file', _file);
             if(/^loanFile/.test(_file.fieldname)){
                 loanFile.push(_file);
             } else if(/^serviceFile/.test(_file.fieldname)){
